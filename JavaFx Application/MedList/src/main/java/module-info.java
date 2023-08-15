@@ -17,6 +17,7 @@ module tn.esprit.medlist {
     requires json.simple;
     requires com.google.gson;
     requires jdk.jsobject;
+    requires com.fasterxml.jackson.databind;
 
 
     opens tn.esprit.medlist to javafx.fxml;
