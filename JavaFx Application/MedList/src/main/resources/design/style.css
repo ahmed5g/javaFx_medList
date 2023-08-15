@@ -8,6 +8,14 @@ and open the template in the editor.
     Author     : WINDOWS 10
 */
 
+
+.root{
+ -fx-background-color:  #C8C8C6;
+}
+
+
+
+
 .white-bg{
     -fx-background-color: #fff;
 }
@@ -31,3 +39,29 @@ and open the template in the editor.
     -fx-border-color: linear-gradient(to bottom right, #16a47c, #2a827b);
     -fx-border-width: .8px;
 }
+
+
+.anchorpane {
+    -fx-background-color: #fff;
+    -fx-background-radius: 30px;
+    -fx-border-radius: 30px;
+    -fx-border-width: 1px;
+    -fx-border-color: black;
+    -fx-effect: dropshadow(three-pass-box, rgba(0, 0, 0, 0.5), 10, 0, 0, 0);
+    -fx-min-width: 200px;
+}
+
+.innerpane{
+    -fx-background-color: #fff;
+    -fx-background-radius: 30px;
+    -fx-border-radius: 30px;
+    -fx-border-width: 2px;
+    -fx-border-color: black;
+}
+
+.split-pane-divider{
+    -fx-background-color: transparent;
+}
+
+
+

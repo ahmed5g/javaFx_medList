@@ -1,6 +1,5 @@
-package tn.esprit.medlist;
+package tn.esprit.medlist.LoginUser;
 
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -11,6 +10,9 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
+import tn.esprit.medlist.DataBaseConnection.JdbcDao;
+import tn.esprit.medlist.Utils.alertMessage;
+import tn.esprit.medlist.getData;
 
 import java.io.File;
 import java.net.URL;
@@ -53,6 +55,7 @@ public class LoginController {
         } else {
             String selectData = "SELECT * FROM users WHERE "
                     + "username = ? and password = ?"; // users IS OUR TABLE NAME
+
 
             connect = JdbcDao.connectDb();
 

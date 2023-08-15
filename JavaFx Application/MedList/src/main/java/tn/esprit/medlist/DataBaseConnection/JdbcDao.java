@@ -1,4 +1,4 @@
-package tn.esprit.medlist;
+package tn.esprit.medlist.DataBaseConnection;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
