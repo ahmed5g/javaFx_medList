@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.text.Font?>
+
+<AnchorPane fx:id="login_form" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/20.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="tn.esprit.medlist.LoginUser.LoginController">
+   <children>
+      <BorderPane prefHeight="600.0" prefWidth="800.0">
+         <left>
+            <ImageView fitHeight="600.0" fitWidth="500.0" pickOnBounds="true" preserveRatio="true" BorderPane.alignment="CENTER">
+               <image>
+                  <Image url="@../../../Icons_Assets/Images/greg-rosenke-ZhCOcbnvSvU-unsplash.jpg" />
+               </image>
+            </ImageView>
+         </left>
+         <center>
+            <AnchorPane prefHeight="594.0" prefWidth="380.0" style="-fx-background-color: #ffffff;" BorderPane.alignment="CENTER">
+               <children>
+                  <TextField fx:id="password" layoutX="115.0" layoutY="385.0" styleClass="textfield" stylesheets="@../../../design/style.css" />
+                  <ImageView layoutX="145.0" layoutY="130.0" pickOnBounds="true" preserveRatio="true">
+                     <image>
+                        <Image url="@../../../Icons_Assets/icons8-users-90.png" />
+                     </image>
+                  </ImageView>
+                  <TextField fx:id="username" layoutX="115.0" layoutY="321.0" />
+                  <Label layoutX="115.0" layoutY="361.0" text="Mot de passe" />
+                  <Label layoutX="123.0" layoutY="220.0" text="Connection ">
+                     <font>
+                        <Font size="25.0" />
+                     </font>
+                  </Label>
+                  <Label layoutX="115.0" layoutY="300.0" text="Nom d'utilisateur" />
+                  <Button fx:id="login_btn" layoutX="148.0" layoutY="437.0" mnemonicParsing="false" onAction="#login" text="Connection" />
+                  <Button layoutX="314.0" layoutY="14.0" mnemonicParsing="false" prefHeight="4.0" prefWidth="0.0">
+                     <graphic>
+                        <ImageView fitHeight="27.0" fitWidth="26.0" onDragDetected="#close" pickOnBounds="true">
+                           <image>
+                              <Image url="@../../../Icons_Assets/icons8-close-50.png" />
+                           </image>
+                        </ImageView>
+                     </graphic>
+                  </Button>
+               </children>
+            </AnchorPane>
+         </center>
+      </BorderPane>
+   </children>
+</AnchorPane>
