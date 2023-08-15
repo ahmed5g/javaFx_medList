@@ -1,4 +1,15 @@
-﻿﻿<!DOCTYPE html>
+﻿﻿
+
+// Assuming `javaBridge` is defined elsewhere and has a `receiveUpdatedData` method.
+javaBridge.receiveUpdatedData(data);
+
+// Resolve the Promise with the retrieved data.
+ resolve(data);
+
+
+
+
+﻿<!DOCTYPE html>
 <html lang="en">
 <head>
     <title>Find Nearby Search using the Query API - Bing Maps Samples</title>
@@ -50,8 +61,6 @@
         });
     }
 
-    var receivedData = [];
-
     function getNearByLocations() {
         //Remove any existing data from the layer.
         layer.clear();
@@ -67,25 +76,53 @@
                 location: map.getCenter(),
                 radius: 25
             },
-            filter: new Microsoft.Maps.SpatialDataService.Filter('EntityTypeID','eq',9583) //Filter to retrieve Medicalhealth.
+            filter: new Microsoft.Maps.SpatialDataService.Filter('EntityTypeID','eq',9583) //Filter to retrieve Gas Stations.
         };
 
         //Process the query.
         Microsoft.Maps.SpatialDataService.QueryAPIManager.search(queryOptions, map, function (data) {
-            console.log(data);
             //Add results to the layer.
             layer.add(data);
-            
-       
-           // Assuming `javaBridge` is defined elsewhere and has a `receiveUpdatedData` method.
-           javaBridge.receiveUpdatedData(data);
 
-        // Resolve the Promise with the retrieved data.
-            resolve(data);
+
+
+
+
+            // Loop through the data and log the selected metadata fields for each location
+    data.forEach(item => {
+        const dataItem = item.metadata;
+        const selectedFields = {
+            AddressLine: dataItem.AddressLine,
+            AdminDistrict: dataItem.AdminDistrict,
+            AdminDistrict2: dataItem.AdminDistrict2,
+            CountryRegion: dataItem.CountryRegion,
+            DisplayName: dataItem.DisplayName,
+            EntityID: dataItem.EntityID,
+            EntityTypeID: dataItem.EntityTypeID,
+            Latitude: dataItem.Latitude,
+            Locality: dataItem.Locality,
+            Longitude: dataItem.Longitude,
+            Name: dataItem.Name,
+            Phone: dataItem.Phone,
+            PostalCode: dataItem.PostalCode,
+            SubEntityTypeID: dataItem.SubEntityTypeID
+        };
+
+        console.log(selectedFields);
+
+        // Convert the JavaScript object to a JSON string
+var jsonString = JSON.stringify(selectedFields);
+       
+
+         // Display the selected fields in the Java console
+         javaBridge.receiveUpdatedData(jsonString);
+    });
+
+
+  
+
         });
     }
-
-    
     </script>
     
 </head>
@@ -103,7 +140,7 @@
         // Get your own Bing Maps key at https://www.microsoft.com/maps
         (async () => {
             let script = document.createElement("script");
-          
+            
             script.setAttribute("src", `https://www.bing.com/api/maps/mapcontrol?callback=GetMap&key=QWtqSt1MTNn09yxueZhC~WnvEIvYmw52FUOKsAw0W8w~Aizg11YzcbBgHWAT4MIdVjFCbxEYmjY6qLziT7-oy5IbOV2E_Bliv0Lt1c0YZkk2
 `);
             document.body.appendChild(script);
