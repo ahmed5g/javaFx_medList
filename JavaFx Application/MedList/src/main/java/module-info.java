@@ -15,7 +15,7 @@ module tn.esprit.medlist {
     requires org.apache.httpcomponents.httpclient;
     requires org.apache.httpcomponents.httpcore;
     requires json.simple;
-    requires com.google.gson;
+
     requires jdk.jsobject;
     requires com.fasterxml.jackson.databind;
 
