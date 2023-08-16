@@ -1,15 +1,4 @@
-﻿﻿
-
-// Assuming `javaBridge` is defined elsewhere and has a `receiveUpdatedData` method.
-javaBridge.receiveUpdatedData(data);
-
-// Resolve the Promise with the retrieved data.
- resolve(data);
-
-
-
-
-﻿<!DOCTYPE html>
+﻿﻿﻿<!DOCTYPE html>
 <html lang="en">
 <head>
     <title>Find Nearby Search using the Query API - Bing Maps Samples</title>
@@ -21,8 +10,13 @@ javaBridge.receiveUpdatedData(data);
     <meta name="keywords" content="Microsoft maps, map, gis, API, SDK, Bing, Bing Maps" />
     <meta name="author" content="Microsoft Bing Maps" />
     <meta name="screenshot" content="bmv8-basicfindnearbyexample.jpg" />
+
+
+    <script src="pako.min.js"></script>
+
     
-    <script>
+    
+    <script >
     var map, infobox, layer;
 
     //Query URL to the POI data source
@@ -108,15 +102,43 @@ javaBridge.receiveUpdatedData(data);
             SubEntityTypeID: dataItem.SubEntityTypeID
         };
 
-        console.log(selectedFields);
-
+        
         // Convert the JavaScript object to a JSON string
 var jsonString = JSON.stringify(selectedFields);
+
+        var dataCompressed = compressAndSendData(jsonString);
+        console.log("data has been converted");
+        console.log(typeof(dataCompressed));
        
 
          // Display the selected fields in the Java console
-         javaBridge.receiveUpdatedData(jsonString);
+         javaBridge.receiveUpdatedData(dataCompressed);
     });
+
+
+
+    
+  //  const pako = require('pako');
+
+    function compressAndSendData(jsonfile) {
+    try {
+     
+
+        // Convert the JSON string to a Uint8Array
+        const input = new TextEncoder().encode(jsonfile);
+
+        // Compress the data using pako
+        const compressedData = pako.deflate(input);
+
+        // Convert the compressed data to a base64 string for transmission
+        const compressedBase64 = btoa(String.fromCharCode.apply(null, compressedData));
+
+        console.log("data has been compressed to binary files");
+        return compressedBase64;
+    } catch (error) {
+        console.error(error);
+    }
+}
 
 
   
@@ -135,7 +157,7 @@ var jsonString = JSON.stringify(selectedFields);
         Move the map to load data for the new map view. Click on a pushpin to see some basic information for that location.
     </fieldset>
 
-    <script>
+    <script  >
         // Dynamic load the Bing Maps Key and Script
         // Get your own Bing Maps key at https://www.microsoft.com/maps
         (async () => {
@@ -145,6 +167,8 @@ var jsonString = JSON.stringify(selectedFields);
 `);
             document.body.appendChild(script);
         })();
+        
     </script>
+    
 </body>
 </html>
