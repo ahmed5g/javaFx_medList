@@ -1,12 +1,14 @@
-﻿﻿﻿<!DOCTYPE html>
+﻿﻿<!DOCTYPE html>
 <html lang="en">
+
 <head>
     <title>Find Nearby Search using the Query API - Bing Maps Samples</title>
 
     <meta charset="utf-8" />
-	<link rel="shortcut icon" href="/favicon.ico"/>
+    <link rel="shortcut icon" href="/favicon.ico" />
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
-    <meta name="description" content=" This sample shows how to do a nearby search using the Bing Spatial Data Services Query API to find gas stations that are within 25km of the center of the map." />
+    <meta name="description"
+        content=" This sample shows how to do a nearby search using the Bing Spatial Data Services Query API to find gas stations that are within 25km of the center of the map." />
     <meta name="keywords" content="Microsoft maps, map, gis, API, SDK, Bing, Bing Maps" />
     <meta name="author" content="Microsoft Bing Maps" />
     <meta name="screenshot" content="bmv8-basicfindnearbyexample.jpg" />
@@ -14,161 +16,196 @@
 
     <script src="pako.min.js"></script>
 
-    
-    
-    <script >
-    var map, infobox, layer;
 
-    //Query URL to the POI data source
+
+    <script>
+        var map, infobox, layer;
+
+        //Query URL to the POI data source
         var sdsDataSourceUrl = 'https://spatial.virtualearth.net/REST/v1/data/Microsoft/PointsOfInterest';
 
-    function GetMap() {
-        map = new Microsoft.Maps.Map('#myMap', {});
+        function GetMap() {
+            map = new Microsoft.Maps.Map('#myMap', {});
 
-        //Create an infobox to display content for each result.
-        infobox = new Microsoft.Maps.Infobox(map.getCenter(), { visible: false });
-        infobox.setMap(map);
+            //Create an infobox to display content for each result.
+            infobox = new Microsoft.Maps.Infobox(map.getCenter(), { visible: false });
+            infobox.setMap(map);
 
-        //Create a layer for the results.
-        layer = new Microsoft.Maps.Layer();
-        map.layers.insert(layer);        
+            //Create a layer for the results.
+            layer = new Microsoft.Maps.Layer();
+            map.layers.insert(layer);
 
-        //Add a click event to the layer to show an infobox when a pushpin is clicked.
-        Microsoft.Maps.Events.addHandler(layer, 'click', function (e) {
-            var m = e.target.metadata;
+            //Add a click event to the layer to show an infobox when a pushpin is clicked.
+            Microsoft.Maps.Events.addHandler(layer, 'click', function (e) {
+                var m = e.target.metadata;
 
-            infobox.setOptions({
-                title: m.DisplayName,
-                description: m.AddressLine + ', ' + m.Locality,
-                location: e.target.getLocation(),
-                visible: true
+                infobox.setOptions({
+                    title: m.DisplayName,
+                    description: m.AddressLine + ', ' + m.Locality ,
+                    location: e.target.getLocation(),
+                    visible: true
+                });
             });
-        });       
 
-        //Load the Bing Spatial Data Services module.
-        Microsoft.Maps.loadModule('Microsoft.Maps.SpatialDataService', function () {
-            //Add an event handler for when the map moves.
-            Microsoft.Maps.Events.addHandler(map, 'viewchangeend', getNearByLocations);
+            //Load the Bing Spatial Data Services module.
+            Microsoft.Maps.loadModule('Microsoft.Maps.SpatialDataService', function () {
+                //Add an event handler for when the map moves.
+                Microsoft.Maps.Events.addHandler(map, 'viewchangeend', getNearByLocations);
 
-            //Trigger an initial search.
-            getNearByLocations();
-        });
-    }
+                //Trigger an initial search.
+                getNearByLocations();
+            });
+        }
 
-    function getNearByLocations() {
-        //Remove any existing data from the layer.
-        layer.clear();
+        function getNearByLocations() {
+           try {
+            
+           } catch (error) {
+            console.error(error);
+            
+           } //Remove any existing data from the layer.
+            layer.clear();
 
-        //Hide infobox.
-        infobox.setOptions({ visible: false });
+            //Hide infobox.
+            infobox.setOptions({ visible: false });
 
-        //Create a query to get nearby data.
-        var queryOptions = {
-            queryUrl: sdsDataSourceUrl,
-            spatialFilter: {
-                spatialFilterType: 'nearby',
-                location: map.getCenter(),
-                radius: 25
-            },
-            filter: new Microsoft.Maps.SpatialDataService.Filter('EntityTypeID','eq',9583) //Filter to retrieve Gas Stations.
-        };
+            //Create a query to get nearby data.
+            var queryOptions = {
+                queryUrl: sdsDataSourceUrl,
+                spatialFilter: {
+                    spatialFilterType: 'nearby',
+                    location: map.getCenter(),
+                    radius: 25
+                },
+                filter: new Microsoft.Maps.SpatialDataService.Filter('EntityTypeID', 'eq', 9583) //Filter to retrieve Gas Stations.
+            };
 
-        //Process the query.
-        Microsoft.Maps.SpatialDataService.QueryAPIManager.search(queryOptions, map, function (data) {
-            //Add results to the layer.
-            layer.add(data);
-
-
-
-
-
-            // Loop through the data and log the selected metadata fields for each location
-    data.forEach(item => {
-        const dataItem = item.metadata;
-        const selectedFields = {
-            AddressLine: dataItem.AddressLine,
-            AdminDistrict: dataItem.AdminDistrict,
-            AdminDistrict2: dataItem.AdminDistrict2,
-            CountryRegion: dataItem.CountryRegion,
-            DisplayName: dataItem.DisplayName,
-            EntityID: dataItem.EntityID,
-            EntityTypeID: dataItem.EntityTypeID,
-            Latitude: dataItem.Latitude,
-            Locality: dataItem.Locality,
-            Longitude: dataItem.Longitude,
-            Name: dataItem.Name,
-            Phone: dataItem.Phone,
-            PostalCode: dataItem.PostalCode,
-            SubEntityTypeID: dataItem.SubEntityTypeID
-        };
-
-        
-        // Convert the JavaScript object to a JSON string
-var jsonString = JSON.stringify(selectedFields);
-
-        var dataCompressed = compressAndSendData(jsonString);
-        console.log("data has been converted");
-        console.log(typeof(dataCompressed));
-       
-
-         // Display the selected fields in the Java console
-         javaBridge.receiveUpdatedData(dataCompressed);
-    });
+            //Process the query.
+            Microsoft.Maps.SpatialDataService.QueryAPIManager.search(queryOptions, map, function (data) {
+                //Add results to the layer.
+                layer.add(data);
 
 
 
-    
-  //  const pako = require('pako');
-
-    function compressAndSendData(jsonfile) {
-    try {
-     
-
-        // Convert the JSON string to a Uint8Array
-        const input = new TextEncoder().encode(jsonfile);
-
-        // Compress the data using pako
-        const compressedData = pako.deflate(input);
-
-        // Convert the compressed data to a base64 string for transmission
-        const compressedBase64 = btoa(String.fromCharCode.apply(null, compressedData));
-
-        console.log("data has been compressed to binary files");
-        return compressedBase64;
-    } catch (error) {
-        console.error(error);
-    }
-}
 
 
-  
+                // Loop through the data and log the selected metadata fields for each location
+                data.forEach(item => {
+                    const dataItem = item.metadata;
+                    const selectedFields = {
+                        AddressLine: dataItem.AddressLine,
+                        AdminDistrict: dataItem.AdminDistrict,
+                        AdminDistrict2: dataItem.AdminDistrict2,
+                        CountryRegion: dataItem.CountryRegion,
+                        DisplayName: dataItem.DisplayName,
+                        EntityID: dataItem.EntityID,
+                        EntityTypeID: dataItem.EntityTypeID,
+                        Latitude: dataItem.Latitude,
+                        Locality: dataItem.Locality,
+                        Longitude: dataItem.Longitude,
+                        Name: dataItem.Name,
+                        Phone: dataItem.Phone,
+                        PostalCode: dataItem.PostalCode,
+                        SubEntityTypeID: dataItem.SubEntityTypeID
+                    };
 
-        });
-    }
+
+                    // Convert the JavaScript object to a JSON string
+                    var jsonString = JSON.stringify(selectedFields);
+
+                    var dataCompressed = compressAndSendData(jsonString);
+                    console.log("data has been converted");
+                    console.log(typeof (dataCompressed));
+
+
+                    // Display the selected fields in the Java console
+                    javaBridge.receiveUpdatedData(dataCompressed);
+                });
+
+
+
+
+                //  const pako = require('pako');
+
+                function compressAndSendData(jsonfile) {
+                    try {
+
+
+                        // Convert the JSON string to a Uint8Array
+                        const input = new TextEncoder().encode(jsonfile);
+
+                        // Compress the data using pako
+                        const compressedData = pako.deflate(input);
+
+                        // Convert the compressed data to a base64 string for transmission
+                        const compressedBase64 = btoa(String.fromCharCode.apply(null, compressedData));
+
+                        console.log("data has been compressed to binary files");
+                        return compressedBase64;
+                    } catch (error) {
+                        console.error(error);
+                    }
+                }
+
+
+
+
+            });
+        }
     </script>
-    
+
 </head>
+
 <body>
     <div id="myMap" style="position:relative;width:100%;min-width:290px;height:600px;background-color:gray"></div>
 
     <fieldset style="width:800px;margin-top:10px;">
         <legend>Find Nearby Search using the SDS Query API Sample</legend>
-        This sample shows how to do a nearby search using the Bing Spatial Data Services Query API to find gas stations that are within 25km of the center of the map. 
-        Move the map to load data for the new map view. Click on a pushpin to see some basic information for that location.
+        This sample shows how to do a nearby search using the Bing Spatial Data Services Query API to find gas stations
+        that are within 25km of the center of the map.
+        Move the map to load data for the new map view. Click on a pushpin to see some basic information for that
+        location.
     </fieldset>
 
-    <script  >
-        // Dynamic load the Bing Maps Key and Script
+    <script>
+        try {
+            // Dynamic load the Bing Maps Key and Script
         // Get your own Bing Maps key at https://www.microsoft.com/maps
         (async () => {
             let script = document.createElement("script");
-            
+
             script.setAttribute("src", `https://www.bing.com/api/maps/mapcontrol?callback=GetMap&key=QWtqSt1MTNn09yxueZhC~WnvEIvYmw52FUOKsAw0W8w~Aizg11YzcbBgHWAT4MIdVjFCbxEYmjY6qLziT7-oy5IbOV2E_Bliv0Lt1c0YZkk2
 `);
+            
             document.body.appendChild(script);
+
+            // Load pako library
+            await loadPakoLibrary();
+
+            // Initialize the map
+            GetMap();
+
+
         })();
+            
+        } catch (error) {
+            console.error("Error getting loadded data from server");
+            
+        }
         
+
+        async function loadPakoLibrary() {
+            return new Promise((resolve, reject) => {
+                const pakoScript = document.createElement("script");
+                pakoScript.src = "pako.min.js";
+                pakoScript.onload = resolve;
+                pakoScript.onerror = reject;
+                document.head.appendChild(pakoScript);
+            });
+        }
+
     </script>
-    
+
 </body>
+
 </html>
