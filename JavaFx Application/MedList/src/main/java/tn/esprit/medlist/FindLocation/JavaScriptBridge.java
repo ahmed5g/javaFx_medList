@@ -38,4 +38,9 @@ public class JavaScriptBridge {
             e.printStackTrace();
         }
     }
+
+
+
+
+
 }
