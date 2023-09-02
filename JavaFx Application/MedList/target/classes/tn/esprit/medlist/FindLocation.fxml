@@ -66,6 +66,7 @@
                                           <Button mnemonicParsing="false" text="Ajouter Medecin" GridPane.rowIndex="2" />
                                           <Label text="Nom Medecin :" />
                                           <Label text="Specialité : " GridPane.rowIndex="1" />
+                                          <Button layoutX="10.0" layoutY="88.0" mnemonicParsing="false" text="Ajouter disponiblitié " GridPane.columnIndex="1" GridPane.rowIndex="2" />
                                        </children>
                                     </GridPane>
                                  </children>
@@ -83,12 +84,12 @@
                   </AnchorPane>
                   <AnchorPane layoutX="10.0" layoutY="10.0" minHeight="0.0" minWidth="0.0" prefHeight="239.0" prefWidth="799.0">
                      <children>
-                        <TableView layoutX="166.0" layoutY="-20.0" prefHeight="213.6" prefWidth="799.2" stylesheets="@../../../design/style.css" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                        <TableView fx:id="doctorTableView" layoutX="166.0" layoutY="-20.0" prefHeight="213.6" prefWidth="799.2" stylesheets="@../../../design/style.css" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                           <columns>
-                            <TableColumn prefWidth="148.80004578828812" text="Identifiant Medecin" />
-                            <TableColumn prefWidth="120.53337097167969" text="Nom Medecin" />
-                              <TableColumn prefWidth="166.66665649414062" text="Specialaité" />
-                              <TableColumn prefWidth="361.333251953125" text="Rendez-Vous" />
+                            <TableColumn fx:id="idColumn" prefWidth="148.80004578828812" text="Identifiant Medecin" />
+                            <TableColumn fx:id="nomColumn" prefWidth="120.53337097167969" text="Nom Medecin" />
+                              <TableColumn fx:id="SpecialityColumn" prefWidth="166.66665649414062" text="Specialaité" />
+                              <TableColumn fx:id="availableColumn" prefWidth="361.333251953125" text="Rendez-Vous" />
                           </columns>
                         </TableView>
                      </children>

@@ -4,14 +4,14 @@ import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.SimpleDoubleProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.concurrent.Worker;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
-import javafx.scene.control.TextArea;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
+import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.TilePane;
 import javafx.scene.web.WebEngine;
@@ -21,8 +21,12 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 import tn.esprit.medlist.Controllers.Utiles.JavaScriptBridge;
 import tn.esprit.medlist.Controllers.Utiles.MapController;
+import tn.esprit.medlist.Core.Models.Doctor;
 import tn.esprit.medlist.Core.Models.LocationInfo;
+import tn.esprit.medlist.Core.Models.Patient;
 import tn.esprit.medlist.Core.Models.Slot;
+import tn.esprit.medlist.Core.Services.DoctorService;
+import tn.esprit.medlist.Core.Services.Implimentation.JDBCDrService;
 import tn.esprit.medlist.Core.Services.Implimentation.JDBCPatientService;
 import tn.esprit.medlist.Core.Services.Implimentation.JDBCSlotService;
 import tn.esprit.medlist.Core.Services.PatientService;
@@ -30,6 +34,7 @@ import tn.esprit.medlist.Core.Services.SlotService;
 import tn.esprit.medlist.Core.Utils.BingAPI.BingMapsApi;
 
 import java.net.URL;
+import java.util.List;
 import java.util.ResourceBundle;
 
 
@@ -52,6 +57,12 @@ public class FindLocationController implements Initializable {
 
     @FXML private TilePane SlotSelector;
     @FXML private Label slotDetailsLabel;
+    @FXML private TableView<Doctor> doctorTableView;
+    @FXML private TableColumn<Doctor, Integer> idColumn;
+    @FXML private TableColumn<Doctor, String> nomColumn;
+    @FXML private TableColumn<Doctor, String> SpecialityColumn;
+    @FXML private TableColumn<Doctor, ObservableList<Slot>> availableColumn;
+
 
 
     private DoubleProperty mapLatitude = new SimpleDoubleProperty();
@@ -65,6 +76,7 @@ public class FindLocationController implements Initializable {
 
 
     SlotService slotService = new JDBCSlotService();
+    DoctorService doctorService = new JDBCDrService();
 
     @FXML
     void search(ActionEvent event) {
@@ -142,18 +154,32 @@ public class FindLocationController implements Initializable {
     public void initialize(URL url, ResourceBundle resourceBundle) {
 
 
-        mapController.initialize();
 
+// Initialize the TableView columns and associate them with Doctor properties
+        idColumn.setCellValueFactory(new PropertyValueFactory<>("id"));
+        nomColumn.setCellValueFactory(new PropertyValueFactory<>("name"));
+        SpecialityColumn.setCellValueFactory(new PropertyValueFactory<>("specialty"));
+
+// Bind the availableColumn with the availableSlotsProperty
+        availableColumn.setCellValueFactory(cellData -> cellData.getValue().availableSlotsProperty());
+
+// Populate the TableView with doctors and their available slots
+        List<Doctor> doctorsWithSlots = doctorService.getAllDoctorsWithAvailableSlots();
+        doctorTableView.setItems(FXCollections.observableArrayList(doctorsWithSlots));
+
+
+
+        //  mapController.initialize();
+
+        WebView map= new WebView();
+
+
+        webEngine = map.getEngine();
+        webEngine.load(getClass().getResource("/API/BingMap/BingMap.html").toExternalForm());
         MapPane.getChildren().add(map);
 
 
-        // Create a sample LocationInfo object
-        LocationInfo locationInfo = new LocationInfo("Sample Location","123 Main St","Cityville"
-                ,37.7749,-122.4194);
 
-
-// Display the InfoBox on the map
-        mapController.displayInfoBox(locationInfo);
 
 
         // Enable JavaScript and obtain the JavaScript window object
@@ -168,6 +194,9 @@ public class FindLocationController implements Initializable {
         });
 
         SlotsAvaiblitiyAndSelection();
+
+
+
     }
 
 

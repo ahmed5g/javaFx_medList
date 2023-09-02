@@ -1,61 +1,104 @@
 package tn.esprit.medlist.Controllers.Utiles;
 
 import javafx.event.ActionEvent;
+import javafx.fxml.FXML;
+import javafx.fxml.Initializable;
+import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.VBox;
+import tn.esprit.medlist.Core.Models.Patient;
+import tn.esprit.medlist.Core.Services.Implimentation.JDBCPatientService;
+import tn.esprit.medlist.Core.Services.PatientService;
 
-public class PatientForm extends VBox {
+import java.net.URL;
+import java.util.ResourceBundle;
 
-    private TextField patientNameField = new TextField();
-    private TextField ageField = new TextField();
-    private TextField addressField = new TextField();
+public class PatientForm  {
 
-    public PatientForm() {
-        initializeUI();
-    }
 
-    private void initializeUI() {
-        setSpacing(10);
-        getChildren().addAll(
-                new Label("Patient Name"), patientNameField,
-                new Label("Age"), ageField,
-                new Label("Address"), addressField
-        );
-    }
+    @FXML
+    private TextField patientIdField;
+    @FXML
+    private TextField nameField;
 
-    public String getPatientName() {
-        return patientNameField.getText();
-    }
+    @FXML
+    private TextField prenomField;
 
-    public int getAge() {
-        return Integer.parseInt(ageField.getText());
-    }
+    @FXML
+    private TextField contactNumberField;
 
-    public String getAddress() {
-        return addressField.getText();
-    }
+    @FXML
+    private TextField emailField;
 
-    public boolean isValid() {
-        return !patientNameField.getText().isEmpty() &&
-                !ageField.getText().isEmpty() &&
-                isInteger(ageField.getText()); // Validate age as integer
-        // Add more validation checks as needed
-    }
+    @FXML
+    private TextArea symptomsArea;
 
-    private boolean isInteger(String text) {
+    @FXML
+    private Button addButton;
+
+    @FXML
+    private Label errorLabel;
+
+    PatientService patientService = new JDBCPatientService();
+
+
+    @FXML
+    void savePatient(ActionEvent event) {
         try {
-            Integer.parseInt(text);
-            return true;
+            // Retrieve data from form fields
+            Integer patientId = Integer.valueOf(patientIdField.getText());
+            String name = nameField.getText();
+            String prenom = prenomField.getText();
+            Integer contactNumber = Integer.valueOf(contactNumberField.getText());
+            String email = emailField.getText();
+            String symptoms = symptomsArea.getText();
+
+            // Check for empty fields
+            if (name.isEmpty() || prenom.isEmpty() || email.isEmpty()) {
+                errorLabel.setText("Erreur : Veuillez remplir tous les champs obligatoires.");
+                return; // Stop processing if any required fields are empty
+            }
+
+            // Save the patient
+            boolean saved = patientService.addPatient(new Patient(patientId, name, prenom, email, contactNumber, symptoms));
+
+            // Check if the patient was saved successfully
+            if (saved) {
+                errorLabel.setText("Patient ajouté avec succès.");
+            } else {
+                errorLabel.setText("Erreur : Impossible d'ajouter le patient.");
+            }
         } catch (NumberFormatException e) {
-            return false;
+            errorLabel.setText("Erreur : Numéro de patient ou Identifiant du patient invalide .");
         }
     }
 
-    public void savePatient(ActionEvent actionEvent) {
+
+    @FXML
+    public void initialize() {
+
+        // Initialize your form, e.g., set up event handlers and initial states
+
+        // Set an initial message for the error label (if needed)
+        errorLabel.setText("");
+
+        // Clear the error label when any text field is clicked
+        patientIdField.setOnMouseClicked(event -> clearErrorLabel());
+        nameField.setOnMouseClicked(event -> clearErrorLabel());
+        prenomField.setOnMouseClicked(event -> clearErrorLabel());
+        contactNumberField.setOnMouseClicked(event -> clearErrorLabel());
+        emailField.setOnMouseClicked(event -> clearErrorLabel());
+
+        // Handle the "Save" button click event
+        addButton.setOnAction(this::savePatient);
+
     }
 
-    public void returnToAppoinment(ActionEvent actionEvent) {
+    private void clearErrorLabel() {
+        // Clear the error label text
+        errorLabel.setText("");
     }
 }
 

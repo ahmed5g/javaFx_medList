@@ -10,7 +10,9 @@ public interface DoctorService {
     void updateDoctor(Doctor doctor);
     void deleteDoctor(int doctorId);
     Doctor getDoctorById(int doctorId);
-    List<Doctor> getAllDoctors();
+
+
+    List<Doctor> getAllDoctorsWithAvailableSlots();
 
     List<Slot> getDoctorAvailableSlots(int doctorId);
 }

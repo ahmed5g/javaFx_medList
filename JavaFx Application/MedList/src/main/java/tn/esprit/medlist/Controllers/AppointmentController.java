@@ -127,21 +127,6 @@ public class AppointmentController extends SceneController implements Initializa
 
 
 
-    @FXML
-    void PatientFormHandler(){
-        if (patientForm.isValid()) {
-            String patientName = patientForm.getPatientName();
-            int age = patientForm.getAge();
-            String address = patientForm.getAddress();
-
-            // Logic to add the appointment with the given data
-            // For example, create an Appointment object and add it to a list
-        } else {
-            alertMessage.warningMessage("veuilez verifier/completer le formulaire du patient");
-        }
-    }
-
-
     //TILEPANE SELECTOR FOR SLOTS AVAIBLITIY AND SELECTION
     private void SlotsAvaiblitiyAndSelection(){
         // Assuming slots is a list of available slots for a doctor

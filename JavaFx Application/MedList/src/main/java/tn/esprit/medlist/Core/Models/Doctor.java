@@ -1,23 +1,22 @@
 package tn.esprit.medlist.Core.Models;
 
-import java.util.List;
+import javafx.beans.property.*;
+import javafx.collections.ObservableList;
+import javafx.collections.FXCollections;
 
 public class Doctor {
 
     private int id;
     private String name;
-
     private String specialty;
-    private List<Slot> availableSlots;
 
-    public Doctor(int id, String name, String specialty, List<Slot> availableSlots) {
+    // Define a JavaFX property for available slots
+    private final ObjectProperty<ObservableList<Slot>> availableSlotsProperty = new SimpleObjectProperty<>(this, "availableSlots", FXCollections.observableArrayList());
+
+    public Doctor(int id, String name, String specialty) {
         this.id = id;
         this.name = name;
         this.specialty = specialty;
-        this.availableSlots = availableSlots;
-    }
-
-    public Doctor(int id, String name, String specialty) {
     }
 
     public int getId() {
@@ -44,15 +43,27 @@ public class Doctor {
         this.specialty = specialty;
     }
 
-    public void setAvailableSlots(List<Slot> availableSlots) {
-        this.availableSlots = availableSlots;
+    public ObservableList<Slot> getAvailableSlotsProperty() {
+        return availableSlotsProperty.get();
     }
 
-    public void addAvailableSlot(Slot slot) {
-        availableSlots.add(slot);
+    public ObjectProperty<ObservableList<Slot>> availableSlotsPropertyProperty() {
+        return availableSlotsProperty;
     }
 
-    public List<Slot> getAvailableSlots() {
-        return availableSlots;
+    public void setAvailableSlotsProperty(ObservableList<Slot> availableSlotsProperty) {
+        this.availableSlotsProperty.set(availableSlotsProperty);
+    }
+
+    public ObjectProperty<ObservableList<Slot>> availableSlotsProperty() {
+        return availableSlotsProperty;
+    }
+
+    public final ObservableList<Slot> getAvailableSlots() {
+        return availableSlotsProperty.get();
+    }
+
+    public final void setAvailableSlots(ObservableList<Slot> availableSlots) {
+        availableSlotsProperty.set(availableSlots);
     }
 }

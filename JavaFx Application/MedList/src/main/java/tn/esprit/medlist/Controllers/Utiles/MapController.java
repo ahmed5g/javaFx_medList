@@ -28,21 +28,4 @@ public class MapController {
     }
 
 
-    // Method to display InfoBoxes in JavaScript
-    public void displayInfoBox(LocationInfo locationInfo) {
-
-        webEngine.executeScript("displayInfoBox(" + locationInfoToJson(locationInfo) + ");");
-    }
-
-    // Helper method to convert LocationInfo to JSON string
-    private String locationInfoToJson(LocationInfo locationInfo) {
-        // Implement JSON serialization logic here
-        // You can use libraries like Gson to convert the object to JSON
-        // For simplicity, let's assume a basic JSON format:
-        return "{\"displayName\":\"" + locationInfo.getDisplayName() + "\", " +
-                "\"addressLine\":\"" + locationInfo.getAddressLine() + "\", " +
-                "\"locality\":\"" + locationInfo.getLocality() + "\", " +
-                "\"latitude\":" + locationInfo.getLatitude() + ", " +
-                "\"longitude\":" + locationInfo.getLongitude() + "}";
-    }
 }

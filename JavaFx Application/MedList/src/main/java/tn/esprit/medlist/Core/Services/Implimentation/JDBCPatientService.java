@@ -17,9 +17,16 @@ public class JDBCPatientService implements PatientService {
     Connection connection = dbConnection.getConnection();
 
 
+    /**
+     * @return
+     */
+    @Override
+    public Patient createPatient(int patientID, String nom, String prenom, String email, int cn, String Symptoms) {
+       return new Patient(patientID ,nom, prenom,email,cn, Symptoms);
+    }
 
     @Override
-    public void addPatient(Patient patient) {
+    public boolean addPatient(Patient patient) {
         try {
             String sql = "INSERT INTO Patient (nom, prenom, email, contactNumber, Symptoms) VALUES (?, ?, ?, ?, ?)";
             PreparedStatement preparedStatement = connection.prepareStatement(sql);
@@ -29,9 +36,11 @@ public class JDBCPatientService implements PatientService {
             preparedStatement.setInt(4, patient.getContactNumber());
             preparedStatement.setString(5, patient.getSymptoms());
             preparedStatement.executeUpdate();
+            return true;
         } catch (SQLException e) {
-            e.printStackTrace();
+            return false;
         }
+
     }
 
     @Override

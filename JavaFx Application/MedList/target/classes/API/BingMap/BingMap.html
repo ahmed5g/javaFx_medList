@@ -120,23 +120,6 @@
 
                 }
 
-                // Function to display InfoBox
-                function displayInfoBox(locationInfo) {
-                    var infoBoxOptions = {
-                        title: locationInfo.displayName,
-                        description: locationInfo.addressLine + ', ' + locationInfo.locality,
-                        location: new Microsoft.Maps.Location(locationInfo.latitude, locationInfo.longitude),
-                        visible: true
-                    };
-
-                    // Create and display InfoBox
-                    var infoBox = new Microsoft.Maps.Infobox(locationInfo.location, infoBoxOptions);
-                    map.entities.push(infoBox);
-                }
-
-                // Initialize the map when the page loads
-                window.onload = initializeMap;
-
 
 
 
