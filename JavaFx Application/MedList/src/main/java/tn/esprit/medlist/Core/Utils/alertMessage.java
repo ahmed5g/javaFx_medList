@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package tn.esprit.medlist.Utils;
+package tn.esprit.medlist.Core.Utils;
 
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
@@ -34,6 +34,14 @@ public class alertMessage {
         alert.setContentText(message);
         alert.showAndWait();
 
+    }
+
+    public void warningMessage(String message) {
+        Alert alert = new Alert(AlertType.WARNING);
+        alert.setTitle("Warning Message");
+        alert.setHeaderText(null);
+        alert.setContentText(message);
+        alert.showAndWait();
     }
 
 

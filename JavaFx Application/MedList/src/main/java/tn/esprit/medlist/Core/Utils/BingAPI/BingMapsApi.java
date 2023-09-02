@@ -1,4 +1,4 @@
-package tn.esprit.medlist.FindLocation.BingAPI;
+package tn.esprit.medlist.Core.Utils.BingAPI;
 
 import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
@@ -47,6 +47,10 @@ public class BingMapsApi {
         String response;
         return response = callApi(localSearchUrl);
     }
+
+
+
+
 }
 
 

@@ -1,4 +1,4 @@
-package tn.esprit.medlist;
+package tn.esprit.medlist.Core.Models.Users;
 
 public class getData {
     public static String username;

@@ -1,24 +1,18 @@
-package tn.esprit.medlist.LoginUser;
+package tn.esprit.medlist.Controllers;
 
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
-import javafx.scene.Parent;
-import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
-import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
-import javafx.stage.StageStyle;
-import tn.esprit.medlist.DataBaseConnection.JdbcDao;
-import tn.esprit.medlist.Utils.alertMessage;
-import tn.esprit.medlist.getData;
+import tn.esprit.medlist.Controllers.Utiles.SceneController;
+import tn.esprit.medlist.Core.Infrastructure.DataBaseConnection;
+import tn.esprit.medlist.Core.Models.Users.getData;
+import tn.esprit.medlist.Core.Utils.alertMessage;
 
-import java.io.File;
-import java.net.URL;
 import java.sql.*;
 
-public class LoginController {
+public class LoginController extends SceneController {
 
     @FXML
     private Button login_btn;
@@ -32,7 +26,6 @@ public class LoginController {
     @FXML
     private TextField username;
 
-    private Connection connect;
     private PreparedStatement prepare;
     private ResultSet result;
     private Statement statement;
@@ -42,6 +35,10 @@ public class LoginController {
 
 
 
+
+    //DATA BASE INITIALIZATION
+    DataBaseConnection dbConnection = DataBaseConnection.getInstance();
+    Connection connection = dbConnection.getConnection();
 
 
     @FXML
@@ -57,12 +54,12 @@ public class LoginController {
                     + "username = ? and password = ?"; // users IS OUR TABLE NAME
 
 
-            connect = JdbcDao.connectDb();
+
 
 
 
             try {
-                prepare = connect.prepareStatement(selectData);
+                prepare = connection.prepareStatement(selectData);
                 prepare.setString(1, username.getText());
                 prepare.setString(2, password.getText());
 
@@ -78,9 +75,18 @@ public class LoginController {
                         alert.successMessage("Successfully Login!");
 
 
+                        Stage currentStage = (Stage) login_btn.getScene().getWindow();
+                        switchScene("WelcomePage.fxml", currentStage);
+
+                        //@FXML
+                        //    private void onLoginButtonClicked(ActionEvent event) throws IOException {
+                        //        Stage currentStage = (Stage) loginButton.getScene().getWindow();
+                        //        switchScene("WelcomePage.fxml", currentStage);
+                        //    }
+                        //src/main/resources/tn/esprit/medlist/WelcomePage.fxml
                         // TO LINK THE MAIN FORM
-                        login_btn.getScene().getWindow().hide();
-                        URL url = new File("src/main/resources/tn/esprit/medlist/FindLocation.fxml").toURI().toURL();
+                        /*login_btn.getScene().getWindow().hide();
+                        URL url = new File("src/main/resources/tn/esprit/medlist/WelcomePage.fxml").toURI().toURL();
                         Parent root = FXMLLoader.load(url);
                         Stage stage = new Stage();
                         Scene scene = new Scene(root);
@@ -98,7 +104,7 @@ public class LoginController {
                         stage.initStyle(StageStyle.TRANSPARENT);
                         stage.setScene(scene);
                         stage.show();
-
+*/
                     } else {
                         // ELSE, THEN ERROR MESSAGE WILL APPEAR
                         alert.errorMessage("Nom d'utilisateur ou mot de passe incorrectes");
@@ -110,6 +116,7 @@ public class LoginController {
         }
     }
 
+    @FXML
     public void close(){
         System.exit(0);
     }

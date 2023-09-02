@@ -1,4 +1,4 @@
-package tn.esprit.medlist.FindLocation;
+package tn.esprit.medlist.Controllers;
 
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.SimpleDoubleProperty;
@@ -8,21 +8,28 @@ import javafx.concurrent.Worker;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.control.Button;
+import javafx.scene.control.Label;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.TilePane;
 import javafx.scene.web.WebEngine;
 import javafx.scene.web.WebView;
 import netscape.javascript.JSObject;
 import org.json.JSONArray;
 import org.json.JSONObject;
-import tn.esprit.medlist.FindLocation.BingAPI.BingMapsApi;
-import tn.esprit.medlist.FindLocation.Models.Doctor.Doctor;
+import tn.esprit.medlist.Controllers.Utiles.JavaScriptBridge;
+import tn.esprit.medlist.Controllers.Utiles.MapController;
+import tn.esprit.medlist.Core.Models.LocationInfo;
+import tn.esprit.medlist.Core.Models.Slot;
+import tn.esprit.medlist.Core.Services.Implimentation.JDBCPatientService;
+import tn.esprit.medlist.Core.Services.Implimentation.JDBCSlotService;
+import tn.esprit.medlist.Core.Services.PatientService;
+import tn.esprit.medlist.Core.Services.SlotService;
+import tn.esprit.medlist.Core.Utils.BingAPI.BingMapsApi;
 
 import java.net.URL;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
 import java.util.ResourceBundle;
 
 
@@ -39,13 +46,25 @@ public class FindLocationController implements Initializable {
     private WebView DisplayMapPane;
     @FXML
     private AnchorPane MapPane;
-
-    private WebView mapView;
+    @FXML private WebView map;
     private WebEngine webEngine;
+
+
+    @FXML private TilePane SlotSelector;
+    @FXML private Label slotDetailsLabel;
+
 
     private DoubleProperty mapLatitude = new SimpleDoubleProperty();
     private DoubleProperty mapLongitude = new SimpleDoubleProperty();
     private StringProperty query = new SimpleStringProperty();
+
+
+    MapController mapController ; // Get the MapController instance
+
+
+
+
+    SlotService slotService = new JDBCSlotService();
 
     @FXML
     void search(ActionEvent event) {
@@ -122,12 +141,20 @@ public class FindLocationController implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
 
-        mapView = new WebView();
-        WebEngine webEngine = mapView.getEngine();
 
-        webEngine.load(getClass().getResource("/API/BingMap/BingMap.html").toExternalForm());
+        mapController.initialize();
 
-        MapPane.getChildren().add(mapView);
+        MapPane.getChildren().add(map);
+
+
+        // Create a sample LocationInfo object
+        LocationInfo locationInfo = new LocationInfo("Sample Location","123 Main St","Cityville"
+                ,37.7749,-122.4194);
+
+
+// Display the InfoBox on the map
+        mapController.displayInfoBox(locationInfo);
+
 
         // Enable JavaScript and obtain the JavaScript window object
         webEngine.getLoadWorker().stateProperty().addListener((observable, oldValue, newValue) -> {
@@ -139,6 +166,24 @@ public class FindLocationController implements Initializable {
                 window.setMember("javaBridge", bridge);
             }
         });
+
+        SlotsAvaiblitiyAndSelection();
+    }
+
+
+    //TILEPANE SELECTOR FOR SLOTS AVAIBLITIY AND SELECTION
+    private void SlotsAvaiblitiyAndSelection(){
+        // Assuming slots is a list of available slots for a doctor
+        for (Slot slot : slotService.getAllSlots()) {
+            Button slotButton = new Button(slot.getStartTime() + " - " + slot.getEndTime());
+            // Customize button appearance (e.g., style, size, etc.) if needed
+            slotButton.setOnAction(event -> {
+                // Handle slot button click event here
+                // You can open a dialog or perform some action when a slot is selected
+            });
+            SlotSelector.getChildren().add(slotButton);
+        }
+
     }
 
 
@@ -154,7 +199,9 @@ public class FindLocationController implements Initializable {
 
 
 
-        // Method to initiate Bing Maps API request for general search
+
+
+    // Method to initiate Bing Maps API request for general search
         public void searchQuery() {
             // Construct Bing Maps API request URL for local search
             String apiUrl = "https://dev.virtualearth.net/REST/v1/LocalSearch/?query=" +
