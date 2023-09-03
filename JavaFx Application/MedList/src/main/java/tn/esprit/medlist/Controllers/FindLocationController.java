@@ -1,9 +1,7 @@
 package tn.esprit.medlist.Controllers;
 
-import javafx.beans.property.DoubleProperty;
-import javafx.beans.property.SimpleDoubleProperty;
-import javafx.beans.property.SimpleStringProperty;
-import javafx.beans.property.StringProperty;
+import javafx.beans.property.*;
+import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.concurrent.Worker;
@@ -24,8 +22,11 @@ import tn.esprit.medlist.Controllers.Utiles.MapController;
 import tn.esprit.medlist.Core.Models.Doctor;
 import tn.esprit.medlist.Core.Models.LocationInfo;
 import tn.esprit.medlist.Core.Models.Patient;
+import tn.esprit.medlist.Core.Models.Appointment;
 import tn.esprit.medlist.Core.Models.Slot;
+import tn.esprit.medlist.Core.Services.AppoinmentService;
 import tn.esprit.medlist.Core.Services.DoctorService;
+import tn.esprit.medlist.Core.Services.Implimentation.AppoinmentServiceImpl;
 import tn.esprit.medlist.Core.Services.Implimentation.JDBCDrService;
 import tn.esprit.medlist.Core.Services.Implimentation.JDBCPatientService;
 import tn.esprit.medlist.Core.Services.Implimentation.JDBCSlotService;
@@ -54,6 +55,18 @@ public class FindLocationController implements Initializable {
     @FXML private WebView map;
     private WebEngine webEngine;
 
+    @FXML
+    private Label AddSlotToDoctorMessage;
+
+    @FXML
+    private Label DoctorSelectedLabel;
+
+    @FXML
+    private Label DoctorSpecialitySelectedLAB;
+
+    @FXML
+    private Label SlotSelectedLAB;
+
 
     @FXML private TilePane SlotSelector;
     @FXML private Label slotDetailsLabel;
@@ -65,9 +78,15 @@ public class FindLocationController implements Initializable {
 
 
 
+
+    // Define observable properties for selected doctor and slot
+    private final SimpleObjectProperty<Doctor> selectedDoctor = new SimpleObjectProperty<>();
+    private final SimpleObjectProperty<Slot> selectedSlot = new SimpleObjectProperty<>();
+
     private DoubleProperty mapLatitude = new SimpleDoubleProperty();
     private DoubleProperty mapLongitude = new SimpleDoubleProperty();
     private StringProperty query = new SimpleStringProperty();
+
 
 
     MapController mapController ; // Get the MapController instance
@@ -77,6 +96,8 @@ public class FindLocationController implements Initializable {
 
     SlotService slotService = new JDBCSlotService();
     DoctorService doctorService = new JDBCDrService();
+    PatientService patientService = new JDBCPatientService();
+    AppoinmentService appoinmentService = new AppoinmentServiceImpl();
 
     @FXML
     void search(ActionEvent event) {
@@ -149,83 +170,144 @@ public class FindLocationController implements Initializable {
         DisplayMapPane.getEngine().executeScript("updateMarker(" + latitude + ", " + longitude + ")");
     }
 
-
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
-
-
-
-// Initialize the TableView columns and associate them with Doctor properties
+        // Initialize the TableView columns and associate them with Doctor properties
         idColumn.setCellValueFactory(new PropertyValueFactory<>("id"));
         nomColumn.setCellValueFactory(new PropertyValueFactory<>("name"));
         SpecialityColumn.setCellValueFactory(new PropertyValueFactory<>("specialty"));
-
-// Bind the availableColumn with the availableSlotsProperty
         availableColumn.setCellValueFactory(cellData -> cellData.getValue().availableSlotsProperty());
 
-// Populate the TableView with doctors and their available slots
+        // Populate the TableView with doctors and their available slots
         List<Doctor> doctorsWithSlots = doctorService.getAllDoctorsWithAvailableSlots();
         doctorTableView.setItems(FXCollections.observableArrayList(doctorsWithSlots));
 
 
+        doctorTableView.getSelectionModel().selectedItemProperty().addListener(
+                (ObservableValue<? extends Doctor> observable, Doctor oldValue, Doctor newValue) -> {
+                    selectedDoctor.set(newValue); // Update the selected doctor
+                    if (newValue != null) {
+                        // A new doctor is selected, you can access it using 'newValue'
+                        Doctor selectedDoctor = newValue;
+                        List<Slot> s = (List<Slot>) selectedSlot.getValue();
+                        selectedDoctor.setAvailableSlots((ObservableList<Slot>) s);
+                        selectedDoctor.getAvailableSlots();
+                        // Update labels to display selected doctor's information
+                        DoctorSelectedLabel.setText(selectedDoctor.getName());
+                        DoctorSpecialitySelectedLAB.setText(selectedDoctor.getSpecialty());
+                        // Now you can perform actions with the selected doctor
+                        // For example, display details or enable/disable buttons based on the selected doctor
+                        System.out.println("Selected Doctor: " + selectedDoctor.getName() + selectedDoctor.getSpecialty());
+                    } else {
+                        // Clear labels when no doctor is selected
+                        DoctorSelectedLabel.setText("");
+                        DoctorSpecialitySelectedLAB.setText("");
+                    }
+                }
+        );
 
-        //  mapController.initialize();
-
-        WebView map= new WebView();
-
-
+        // Initialize the WebView for the map
+        WebView map = new WebView();
         webEngine = map.getEngine();
         webEngine.load(getClass().getResource("/API/BingMap/BingMap.html").toExternalForm());
         MapPane.getChildren().add(map);
 
-
-
-
-
         // Enable JavaScript and obtain the JavaScript window object
-        webEngine.getLoadWorker().stateProperty().addListener((observable, oldValue, newValue) -> {
-            if (newValue == Worker.State.SUCCEEDED) {
-                JSObject window = (JSObject) webEngine.executeScript("window");
+        webEngine.getLoadWorker().stateProperty().addListener(
+                (ObservableValue<? extends Worker.State> observable, Worker.State oldValue, Worker.State newValue) -> {
+                    if (newValue == Worker.State.SUCCEEDED) {
+                        JSObject window = (JSObject) webEngine.executeScript("window");
 
-                // Create a Java-to-JavaScript bridge object
-                JavaScriptBridge bridge = new JavaScriptBridge();
-                window.setMember("javaBridge", bridge);
-            }
-        });
+                        // Create a Java-to-JavaScript bridge object
+                        JavaScriptBridge bridge = new JavaScriptBridge();
+                        window.setMember("javaBridge", bridge);
+                    }
+                }
+        );
 
+        // Initialize slot selection and display
         SlotsAvaiblitiyAndSelection();
-
-
-
+        SlotSelectedLAB.setText("");
     }
 
 
-    //TILEPANE SELECTOR FOR SLOTS AVAIBLITIY AND SELECTION
-    private void SlotsAvaiblitiyAndSelection(){
+
+    private void SlotsAvaiblitiyAndSelection() {
         // Assuming slots is a list of available slots for a doctor
-        for (Slot slot : slotService.getAllSlots()) {
+        List<Slot> availableSlots = slotService.getAllSlots();
+
+        for (Slot slot : availableSlots) {
             Button slotButton = new Button(slot.getStartTime() + " - " + slot.getEndTime());
             // Customize button appearance (e.g., style, size, etc.) if needed
             slotButton.setOnAction(event -> {
-                // Handle slot button click event here
-                // You can open a dialog or perform some action when a slot is selected
+                // Retrieve the selected slot using slotService.findSlotById()
+                int selectedSlotId = slot.getSlotId(); // Get the ID of the selected slot
+                Slot selectedSlot = slotService.findSlotById(selectedSlotId);
+
+                SlotSelectedLAB.setText("Selected Slot: " + selectedSlot.getStartTime() + " - " + selectedSlot.getEndTime());
+                // Now you can use the selectedSlot as needed
+                if (selectedSlot != null) {
+                    // Do something with the selected slot
+                    System.out.println("Selected Slot: " + selectedSlot.getStartTime() + " - " + selectedSlot.getEndTime());
+                } else {
+                    // Handle the case where the slot couldn't be found
+                    System.out.println("Selected slot not found.");
+                }
             });
             SlotSelector.getChildren().add(slotButton);
-        }
 
+        }
+    }
+
+
+
+    // In your PatientService or a dedicated service class
+    public Patient getRandomPatientById(int patientId) {
+        // Implement logic to fetch a random patient by ID
+        // For demonstration, you can return a static patient with the given ID
+        // Replace this with your actual logic to fetch a patient
+        return new Patient(patientId, "Random Patient", "Random LastName", "random@example.com", 1234567890, "Random Symptoms");
+    }
+    @FXML
+    void addSlotToDoctorButtonOnClick(ActionEvent event) {
+        // Get the selected doctor and slot from the observable properties
+        //Doctor selectedDoctor = this.selectedDoctor.get();
+        //Slot selectedSlot = this.selectedSlot.get();
+
+        // Get a random patient (you can replace 1 with a random patient ID)
+        Patient selectedPatient = patientService.getPatientById(1);
+        Doctor SelectedDcotor = doctorService.getDoctorById(1);
+
+        Slot SlectedSlot = slotService.findSlotById(2);
+
+        // Check if the selected slot is available
+        if (SlectedSlot.isAvailable()) {
+            // Create an appointment
+            Appointment appointment = appoinmentService.scheduleAppoinment(3, selectedPatient, SelectedDcotor, SlectedSlot);
+
+            // Save the appointment
+            appoinmentService.saveAppointment(appointment);
+
+            // Update the slot availability to mark it as occupied
+            SlectedSlot.setAvailable(false);
+
+            // You may want to update the UI or database to reflect the changes
+
+            System.out.println("Appointment ADDED");
+
+            System.out.println(SelectedDcotor.getAvailableSlots());
+
+            // Check if both a doctor and a slot are selected
+
+        }
     }
 
 
 
 
-
-
-
-
-
-
-
-
+    private Slot getSelectedSlot() {
+        return selectedSlot.get();
+    }
 
 
 
