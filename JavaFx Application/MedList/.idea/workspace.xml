@@ -4,7 +4,9 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="f4268d3d-457e-4004-8980-3ace6d77d39e" name="Changes" comment="" />
+    <list default="true" id="f4268d3d-457e-4004-8980-3ace6d77d39e" name="Changes" comment="">
+      <change beforePath="$PROJECT_DIR$/../../Symfony 5/MedList/medList" beforeDir="false" afterPath="$PROJECT_DIR$/../../Symfony 5/MedList/medList" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -46,7 +48,7 @@
     "project.structure.last.edited": "Modules",
     "project.structure.proportion": "0.0",
     "project.structure.side.proportion": "0.29885057",
-    "settings.editor.selected.configurable": "preferences.pluginManager"
+    "settings.editor.selected.configurable": "project.propVCSSupport.DirectoryMappings"
   }
 }]]></component>
   <component name="RecentsManager">
