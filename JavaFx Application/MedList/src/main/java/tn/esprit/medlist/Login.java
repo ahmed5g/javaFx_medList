@@ -21,7 +21,6 @@ public class Login extends Application {
     public void start(Stage stage) throws IOException {
         URL url = new File("src/main/resources/tn/esprit/medlist/Login.fxml").toURI().toURL();
         Parent root = FXMLLoader.load(url);
-
         Scene scene = new Scene(root);
 
 

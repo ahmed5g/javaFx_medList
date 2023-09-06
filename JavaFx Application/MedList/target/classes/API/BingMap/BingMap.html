@@ -41,7 +41,7 @@
 
                 infobox.setOptions({
                     title: m.DisplayName,
-                    description: m.AddressLine + ', ' + m.Locality ,
+                    description: m.AddressLine + ', ' + m.Locality,
                     location: e.target.getLocation(),
                     visible: true
                 });
@@ -49,21 +49,48 @@
 
             //Load the Bing Spatial Data Services module.
             Microsoft.Maps.loadModule('Microsoft.Maps.SpatialDataService', function () {
-                //Add an event handler for when the map moves.
-                Microsoft.Maps.Events.addHandler(map, 'viewchangeend', getNearByLocations);
+                // Add a handler for the viewchangeend event
+                Microsoft.Maps.Events.addHandler(map, 'viewchangeend', function () {
+                    var currentZoom = map.getZoom();
 
-                //Trigger an initial search.
-                getNearByLocations();
+
+
+
+
+
+                    //ZOOM SCALE :
+                    //Zoom Level 1: Entire world view
+                    //Zoom Level 5-7: Country-level views
+                    //Zoom Level 10-12: City-level views
+                    //Zoom Level 15-18: Street-level views
+                    //Zoom Level 20: Extremely detailed views
+                    // Check if the current zoom level is the desired level
+                    if (currentZoom >= 13 && currentZoom <= 21) { // Replace with your desired zoom level
+                        // Get the center of the map
+                        var center = map.getCenter();
+                        console.log('Latitude:', center.latitude, 'Longitude:', center.longitude);
+
+                        //Trigger an initial search.
+                        getNearByLocations(center);
+                    }
+
+
+                });
+
+
+
+
+
             });
         }
 
-        function getNearByLocations() {
-           try {
-            
-           } catch (error) {
-            console.error(error);
-            
-           } //Remove any existing data from the layer.
+        function getNearByLocations(center) {
+            try {
+
+            } catch (error) {
+                console.error(error);
+
+            } //Remove any existing data from the layer.
             layer.clear();
 
             //Hide infobox.
@@ -82,8 +109,16 @@
 
             //Process the query.
             Microsoft.Maps.SpatialDataService.QueryAPIManager.search(queryOptions, map, function (data) {
+
                 //Add results to the layer.
                 layer.add(data);
+
+
+
+
+                function addDataToLayer(JavaToJSdata) {
+
+                }
 
 
 
@@ -170,29 +205,29 @@
     <script>
         try {
             // Dynamic load the Bing Maps Key and Script
-        // Get your own Bing Maps key at https://www.microsoft.com/maps
-        (async () => {
-            let script = document.createElement("script");
+            // Get your own Bing Maps key at https://www.microsoft.com/maps
+            (async () => {
+                let script = document.createElement("script");
 
-            script.setAttribute("src", `https://www.bing.com/api/maps/mapcontrol?callback=GetMap&key=QWtqSt1MTNn09yxueZhC~WnvEIvYmw52FUOKsAw0W8w~Aizg11YzcbBgHWAT4MIdVjFCbxEYmjY6qLziT7-oy5IbOV2E_Bliv0Lt1c0YZkk2
+                script.setAttribute("src", `https://www.bing.com/api/maps/mapcontrol?callback=GetMap&key=QWtqSt1MTNn09yxueZhC~WnvEIvYmw52FUOKsAw0W8w~Aizg11YzcbBgHWAT4MIdVjFCbxEYmjY6qLziT7-oy5IbOV2E_Bliv0Lt1c0YZkk2
 `);
-            
-            document.body.appendChild(script);
 
-            // Load pako library
-            await loadPakoLibrary();
+                document.body.appendChild(script);
 
-            // Initialize the map
-            GetMap();
+                // Load pako library
+                await loadPakoLibrary();
+
+                // Initialize the map
+                GetMap();
 
 
-        })();
-            
+            })();
+
         } catch (error) {
             console.error("Error getting loadded data from server");
-            
+
         }
-        
+
 
         async function loadPakoLibrary() {
             return new Promise((resolve, reject) => {

@@ -22,16 +22,20 @@ module tn.esprit.medlist {
 
     opens tn.esprit.medlist to javafx.fxml;
     exports tn.esprit.medlist;
-    exports tn.esprit.medlist.Utils;
-    opens tn.esprit.medlist.Utils to javafx.fxml;
-    exports tn.esprit.medlist.FindLocation;
-    opens tn.esprit.medlist.FindLocation to javafx.fxml;
-    exports tn.esprit.medlist.LoginUser;
-    opens tn.esprit.medlist.LoginUser to javafx.fxml;
-    exports tn.esprit.medlist.DataBaseConnection;
-    opens tn.esprit.medlist.DataBaseConnection to javafx.fxml;
-    exports tn.esprit.medlist.Contact;
-    opens tn.esprit.medlist.Contact to javafx.fxml;
-    exports tn.esprit.medlist.FindLocation.BingAPI;
-    opens tn.esprit.medlist.FindLocation.BingAPI to javafx.fxml;
+    exports tn.esprit.medlist.Core.Utils;
+    opens tn.esprit.medlist.Core.Utils to javafx.fxml;
+
+    exports tn.esprit.medlist.Core.Infrastructure;
+    opens tn.esprit.medlist.Core.Infrastructure to javafx.fxml;
+
+    exports tn.esprit.medlist.Core.Utils.BingAPI;
+    opens tn.esprit.medlist.Core.Utils.BingAPI to javafx.fxml;
+    exports tn.esprit.medlist.Controllers;
+    opens tn.esprit.medlist.Controllers to javafx.fxml;
+    exports tn.esprit.medlist.Core.Models.Users;
+    opens tn.esprit.medlist.Core.Models.Users to javafx.fxml;
+    exports tn.esprit.medlist.Core.Models;
+    opens tn.esprit.medlist.Core.Models to javafx.fxml;
+    exports tn.esprit.medlist.Controllers.Utiles;
+    opens tn.esprit.medlist.Controllers.Utiles to javafx.fxml;
 }

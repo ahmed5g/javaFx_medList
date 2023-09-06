@@ -4,7 +4,9 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="f4268d3d-457e-4004-8980-3ace6d77d39e" name="Changes" comment="" />
+    <list default="true" id="f4268d3d-457e-4004-8980-3ace6d77d39e" name="Changes" comment="">
+      <change beforePath="$PROJECT_DIR$/../../Symfony 5/MedList/medList" beforeDir="false" afterPath="$PROJECT_DIR$/../../Symfony 5/MedList/medList" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -13,6 +15,7 @@
   <component name="FileTemplateManagerImpl">
     <option name="RECENT_TEMPLATES">
       <list>
+        <option value="Interface" />
         <option value="FxmlFile" />
         <option value="Class" />
       </list>
@@ -35,19 +38,26 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent">{
-  &quot;keyToString&quot;: {
-    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
-    &quot;SHARE_PROJECT_CONFIGURATION_FILES&quot;: &quot;true&quot;,
-    &quot;last_opened_file_path&quot;: &quot;C:/Users/ahmad/Desktop/EmployeeManagementSystem-main/employeeManagementSystem&quot;,
-    &quot;project.structure.last.edited&quot;: &quot;Modules&quot;,
-    &quot;project.structure.proportion&quot;: &quot;0.0&quot;,
-    &quot;project.structure.side.proportion&quot;: &quot;0.29885057&quot;,
-    &quot;settings.editor.selected.configurable&quot;: &quot;preferences.pluginManager&quot;
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "OverrideImplement.generate.javadoc": "true",
+    "RunOnceActivity.OpenProjectViewOnStart": "true",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "SHARE_PROJECT_CONFIGURATION_FILES": "true",
+    "last_opened_file_path": "C:/Users/ahmad/Desktop/Spring boot Projects Refrences/E-BookShop----Spring-boot-master",
+    "project.structure.last.edited": "Modules",
+    "project.structure.proportion": "0.0",
+    "project.structure.side.proportion": "0.29885057",
+    "settings.editor.selected.configurable": "project.propVCSSupport.DirectoryMappings"
   }
-}</component>
+}]]></component>
   <component name="RecentsManager">
+    <key name="CreateClassDialog.RecentsKey">
+      <recent name="tn.esprit.medlist.Controllers.Utiles" />
+      <recent name="tn.esprit.medlist.Controllers" />
+      <recent name="tn.esprit.medlist.Core.Models" />
+      <recent name="tn.esprit.medlist.Core.Services" />
+    </key>
     <key name="CopyFile.RECENT_KEYS">
       <recent name="C:\Users\ahmad\Desktop\JavaFX Web Application- Project\JavaFx Application\MedList\src\main\java\tn\esprit\medlist" />
     </key>
@@ -59,12 +69,12 @@
     </key>
   </component>
   <component name="RunManager">
-    <configuration name="Login" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
+    <configuration name="tn.esprit.medlist.Login" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
       <option name="MAIN_CLASS_NAME" value="tn.esprit.medlist.Login" />
       <module name="MedList" />
       <extension name="coverage">
         <pattern>
-          <option name="PATTERN" value="tn.esprit.medlist.Utils.*" />
+          <option name="PATTERN" value="tn.esprit.medlist.Core.Models.Utils.*" />
           <option name="ENABLED" value="true" />
         </pattern>
       </extension>
@@ -74,7 +84,7 @@
     </configuration>
     <recent_temporary>
       <list>
-        <item itemvalue="Application.Login" />
+        <item itemvalue="Application.tn.esprit.medlist.Login" />
       </list>
     </recent_temporary>
   </component>

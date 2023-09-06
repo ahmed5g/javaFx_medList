@@ -1,0 +1,48 @@
+/* Style for the title label */
+.title-label {
+    -fx-font-size: 20px;
+    -fx-font-weight: bold;
+    -fx-padding: 10px 0;
+}
+
+/* Style for labels */
+.label {
+    -fx-font-size: 14px;
+    -fx-text-fill: #333; /* Text color */
+}
+
+/* Style for text fields */
+.text-field {
+    -fx-pref-width: 200px;
+    -fx-font-size: 14px;
+    -fx-padding: 5px;
+}
+
+/* Style for the text area */
+.text-area {
+    -fx-pref-width: 200px;
+    -fx-pref-height: 100px;
+    -fx-font-size: 14px;
+    -fx-padding: 5px;
+}
+
+/* Style for the error label */
+.error-label {
+    -fx-font-size: 12px;
+    -fx-text-fill: red;
+    -fx-padding: 5px 0;
+}
+
+/* Style for the add button */
+.button {
+    -fx-font-size: 14px;
+    -fx-pref-width: 100px;
+    -fx-pref-height: 30px;
+    -fx-background-color: #007acc; /* Button background color */
+    -fx-text-fill: white; /* Button text color */
+}
+
+/* Hover effect for the add button */
+.button:hover {
+    -fx-background-color: #005d99; /* Hover background color */
+}

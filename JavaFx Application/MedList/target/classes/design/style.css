@@ -64,4 +64,16 @@ and open the template in the editor.
 }
 
 
+/* Apply spacing to all table view column headers */
+.table-view .column-header {
+    -fx-padding: 5px 10px; /* Adjust the values as needed for top, right, bottom, and left padding */
+}
+
+/* Apply spacing to specific columns (replace column names as needed) */
+.table-view .column-header.idColumn {
+    -fx-padding: 5px 20px; /* Example: More spacing for the 'id' column */
+}
+
+
+
 
